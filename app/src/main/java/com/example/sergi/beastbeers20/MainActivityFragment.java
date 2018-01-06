@@ -58,7 +58,7 @@ public class MainActivityFragment extends Fragment {
         adapter = new ArrayAdapter<>(
                 getContext(),
                 R.layout.lv_beer_row,
-                R.id.tvPeli,
+                R.id.tvName,
                 items
         );
         lvBeer.setAdapter(adapter);
@@ -90,15 +90,24 @@ public class MainActivityFragment extends Fragment {
         task.execute();
     }
 
-    private class RefreshDataTask extends AsyncTask<Void, Void, Void> {
+    private class RefreshDataTask extends AsyncTask<Void, Void, ArrayList<Categories>> {
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected ArrayList<Categories> doInBackground(Void... voids) {
             BreweryAPI api = new BreweryAPI();
-            String result = api.getBeers("beers", "");
+            ArrayList<Categories> result = api.getCategorias( "");
 
-            Log.d("DEBUG", result);
+            Log.d("DEBUG", result.toString());
 
-            return null;
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Categories> categories) {
+            adapter.clear();
+            for (Categories categori : categories) {
+                adapter.add(categori.getName());
+            }
+
         }
     }
 }

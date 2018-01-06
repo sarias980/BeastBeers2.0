@@ -1,8 +1,14 @@
 package com.example.sergi.beastbeers20;
 
+import android.graphics.Movie;
 import android.net.Uri;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Sarias on 02/01/2018.
@@ -12,7 +18,7 @@ public class BreweryAPI {
     private final String BASE_URL = "http://api.brewerydb.com/v2/";
     private final String API_KEY = "2e2e5069bca1ea80238b2eecb97fdf1f";
 
-    String getBeers( String filtro) {
+   /* ArrayList<Beer> getBeers(String filtro) {
         Uri builtUri = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendPath("beer")
@@ -22,9 +28,9 @@ public class BreweryAPI {
         String url = builtUri.toString();
 
         return doCall(url);
-    }
+    }*/
 
-    String getCategorias(String filtro) {
+    ArrayList<Categories> getCategorias(String filtro) {
         Uri builtUri = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendPath("categories")
@@ -36,14 +42,37 @@ public class BreweryAPI {
         return doCall(url);
     }
 
-    private String doCall(String url) {
+    private ArrayList<Categories> doCall(String url) {
         try {
             String JsonResponse = HttpUtils.get(url);
-            return JsonResponse;
+            return processJson(JsonResponse);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    private ArrayList<Categories> processJson(String jsonResponse) {
+        ArrayList<Categories> categories = new ArrayList<>();
+        try {
+            JSONObject data = new JSONObject(jsonResponse);
+            JSONArray jsonCategories = data.getJSONArray("results");
+            for (int i = 0; i < jsonCategories.length(); i++) {
+                JSONObject jsonCategori = jsonCategories.getJSONObject(i);
+
+                Categories categori = new Categories();
+                if(jsonCategori.has("name")){categori.setName(jsonCategori.getString("name"));}
+                if(jsonCategori.has("id")){categori.setId(jsonCategori.getInt("id"));}
+
+                categories.add(categori);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return categories;
+
     }
 
 }
