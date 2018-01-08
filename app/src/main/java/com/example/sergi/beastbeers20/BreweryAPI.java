@@ -2,6 +2,7 @@ package com.example.sergi.beastbeers20;
 
 import android.graphics.Movie;
 import android.net.Uri;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,14 +31,30 @@ public class BreweryAPI {
         return doCall(url);
     }*/
 
-    ArrayList<Categories> getCategorias(String filtro) {
+    ArrayList<Categories> getCategorias() {
         Uri builtUri = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendPath("categories")
-                .appendQueryParameter("filtro", filtro)
-                .appendQueryParameter("api_key", API_KEY)
+               // .appendQueryParameter("filtro", filtro)
+                .appendQueryParameter("key", API_KEY)
                 .build();
         String url = builtUri.toString();
+
+        Log.d("URL", url);
+
+        return doCall(url);
+    }
+
+
+    ArrayList<Categories> getIngredientes() {
+        Uri builtUri = Uri.parse(BASE_URL)
+                .buildUpon()
+                .appendPath("ingredients")
+               // .appendQueryParameter("filtro", filtro)
+                .appendQueryParameter("key", API_KEY)
+                .build();
+        String url = builtUri.toString();
+        Log.d("URL", url);
 
         return doCall(url);
     }
@@ -57,13 +74,14 @@ public class BreweryAPI {
         ArrayList<Categories> categories = new ArrayList<>();
         try {
             JSONObject data = new JSONObject(jsonResponse);
-            JSONArray jsonCategories = data.getJSONArray("results");
+            JSONArray jsonCategories = data.getJSONArray("data");
+            Log.d("Sarias",jsonCategories.toString());
             for (int i = 0; i < jsonCategories.length(); i++) {
                 JSONObject jsonCategori = jsonCategories.getJSONObject(i);
 
                 Categories categori = new Categories();
-                if(jsonCategori.has("name")){categori.setName(jsonCategori.getString("name"));}
                 if(jsonCategori.has("id")){categori.setId(jsonCategori.getInt("id"));}
+                if(jsonCategori.has("name")){categori.setName(jsonCategori.getString("name"));}
 
                 categories.add(categori);
             }
@@ -74,5 +92,4 @@ public class BreweryAPI {
         return categories;
 
     }
-
 }

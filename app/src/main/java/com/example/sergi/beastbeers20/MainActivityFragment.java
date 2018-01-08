@@ -1,6 +1,8 @@
 package com.example.sergi.beastbeers20;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -22,8 +24,8 @@ import java.util.Arrays;
  */
 public class MainActivityFragment extends Fragment {
 
-    private ArrayList<String> items;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Categories> items;
+    private ArrayAdapter<Categories> adapter;
 
 
     public MainActivityFragment() {
@@ -43,17 +45,7 @@ public class MainActivityFragment extends Fragment {
 
         ListView lvBeer = (ListView) view.findViewById(R.id.lvBeer);
 
-        String[] data = {
-                "Beer 1",
-                "Beer 2",
-                "Beer 3",
-                "Beer 4",
-                "Beer 5",
-                "Beer 6",
-                "Beer 7"
-        };
-
-        items = new ArrayList<>(Arrays.asList(data));
+        items = new ArrayList<>();
 
         adapter = new ArrayAdapter<>(
                 getContext(),
@@ -85,6 +77,12 @@ public class MainActivityFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        refresh();
+    }
+
     private void refresh() {
         RefreshDataTask task = new RefreshDataTask();
         task.execute();
@@ -93,10 +91,21 @@ public class MainActivityFragment extends Fragment {
     private class RefreshDataTask extends AsyncTask<Void, Void, ArrayList<Categories>> {
         @Override
         protected ArrayList<Categories> doInBackground(Void... voids) {
-            BreweryAPI api = new BreweryAPI();
-            ArrayList<Categories> result = api.getCategorias( "");
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String tipusConsulta = preferences.getString("type_list", "categorias");
+            //String filtro = preferences.getString("id", "");
 
-            Log.d("DEBUG", result.toString());
+            BreweryAPI api = new BreweryAPI();
+            ArrayList<Categories> result;
+
+            if (tipusConsulta.equals("categorias")) {
+                result = api.getCategorias();
+            } else {
+                result = api.getIngredientes();
+            }
+
+            if (result != null){Log.d("Sarias",result.toString());}
+            //Log.d("DEBUG", result != null ? result.toString() : null);
 
             return result;
         }
@@ -105,7 +114,7 @@ public class MainActivityFragment extends Fragment {
         protected void onPostExecute(ArrayList<Categories> categories) {
             adapter.clear();
             for (Categories categori : categories) {
-                adapter.add(categori.getName());
+                adapter.add(categori);
             }
 
         }

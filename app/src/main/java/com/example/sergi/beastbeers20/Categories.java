@@ -10,10 +10,7 @@ public class Categories {
 
     @Override
     public String toString() {
-        return "Categories{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                "}\n";
+        return name + " ("+ id+ ")\n";
     }
 
     public int getId() {
