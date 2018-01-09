@@ -9,15 +9,15 @@
         tools:showIn="@layout/activity_detail">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/tvNameDe"
             android:layout_width="0dp"
             android:layout_height="33dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
-            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:text="Name"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintHorizontal_bias="0.0"
@@ -33,16 +33,17 @@
             app:layout_constraintGuide_percent="0.75" />
 
         <TextView
-            android:id="@+id/tvId"
+            android:id="@+id/tvIdDe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
+            android:layout_marginTop="24dp"
+            android:text="ID"
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,16 +55,17 @@
             app:layout_constraintGuide_percent="0.02" />
 
         <TextView
-            android:id="@+id/tvDesc"
+            android:id="@+id/tvDescDe"
             android:layout_width="0dp"
             android:layout_height="165dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="TextView"
+            android:layout_marginTop="24dp"
+            android:text="Description"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvNameDe" />
 
 
     </android.support.constraint.ConstraintLayout>

@@ -39,7 +39,7 @@ public class CategoriesAdapter extends ArrayAdapter<Categories> {
         }
 
         binding.tvName.setText(categorie.getName());
-        binding.tvId.setText(categorie.getId());
+        binding.tvId.setText(Integer.toString(categorie.getId()));
 
         return binding.getRoot();
     }

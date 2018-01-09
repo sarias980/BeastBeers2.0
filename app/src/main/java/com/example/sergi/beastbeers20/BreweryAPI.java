@@ -82,6 +82,7 @@ public class BreweryAPI {
                 Categories categori = new Categories();
                 if(jsonCategori.has("id")){categori.setId(jsonCategori.getInt("id"));}
                 if(jsonCategori.has("name")){categori.setName(jsonCategori.getString("name"));}
+                if(jsonCategori.has("categoryDisplay")){categori.setDesc(jsonCategori.getString("categoryDisplay"));}
 
                 categories.add(categori);
             }

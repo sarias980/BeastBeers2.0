@@ -34,8 +34,7 @@ public class DetailActivityFragment extends Fragment {
         Intent i = getActivity().getIntent();
 
         if (i != null) {
-            Categories categorie = (Categories) i.getSerializableExtra("Categories");
-
+            Categories categorie = (Categories) i.getSerializableExtra("categorie");
             if (categorie != null) {
                 updateUi(categorie);
             }
@@ -47,9 +46,13 @@ public class DetailActivityFragment extends Fragment {
     private void updateUi(Categories categorie) {
         Log.d("Categories", categorie.toString());
 
-        binding.tvName.setText(categorie.getName());
-        binding.tvId.setText(categorie.getId());
-        binding.tvDesc.setText(categorie.getDesc());
+        binding.tvNameDe.setText(categorie.getName());
+        binding.tvIdDe.setText(Integer.toString(categorie.getId()));
+        if (categorie.getDesc() != null) {
+            binding.tvDescDe.setText(categorie.getDesc());
+        } else {
+            binding.tvDescDe.setText("Not found more info");
+        }
     }
 
 }

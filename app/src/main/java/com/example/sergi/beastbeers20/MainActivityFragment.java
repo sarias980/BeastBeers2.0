@@ -17,20 +17,28 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+
 
 import com.example.sergi.beastbeers20.databinding.FragmentMainBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends LifecycleFragment {
 
     private ArrayList<Categories> items;
     private CategoriesAdapter adapter;
     private FragmentMainBinding binding;
+    private SharedPreferences preferences;
+    private DataViewModel model;
+
 
 
     public MainActivityFragment() {
@@ -62,11 +70,20 @@ public class MainActivityFragment extends Fragment {
         binding.lvBeer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Categories categorie = (Categories) adapterView.getItemAtPosition(i);
+                Categories categori = (Categories) adapterView.getItemAtPosition(i);
                 Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra("categorie",categorie);
+                intent.putExtra("categorie",categori);
 
                 startActivity(intent);
+            }
+        });
+
+        model = ViewModelProviders.of(this).get(DataViewModel.class);
+        model.getCategories().observe(this, new Observer<List<Categories>>() {
+            @Override
+            public void onChanged(@Nullable List<Categories> movies) {
+                adapter.clear();
+                adapter.addAll(categori);
             }
         });
 
@@ -94,43 +111,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        refresh();
     }
 
     private void refresh() {
-        RefreshDataTask task = new RefreshDataTask();
-        task.execute();
-    }
-
-    private class RefreshDataTask extends AsyncTask<Void, Void, ArrayList<Categories>> {
-        @Override
-        protected ArrayList<Categories> doInBackground(Void... voids) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String tipusConsulta = preferences.getString("type_list", "categorias");
-            //String filtro = preferences.getString("id", "");
-
-            BreweryAPI api = new BreweryAPI();
-            ArrayList<Categories> result;
-
-            if (tipusConsulta.equals("categorias")) {
-                result = api.getCategorias();
-            } else {
-                result = api.getIngredientes();
-            }
-
-            if (result != null){Log.d("Sarias",result.toString());}
-            //Log.d("DEBUG", result != null ? result.toString() : null);
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Categories> categories) {
-            adapter.clear();
-            for (Categories categori : categories) {
-                adapter.add(categori);
-            }
-
-        }
+        model.reload();
     }
 }
