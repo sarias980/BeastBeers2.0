@@ -1,5 +1,6 @@
 package com.example.sergi.beastbeers20;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -13,8 +14,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.sergi.beastbeers20.databinding.FragmentMainBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +29,8 @@ import java.util.Arrays;
 public class MainActivityFragment extends Fragment {
 
     private ArrayList<Categories> items;
-    private ArrayAdapter<Categories> adapter;
+    private CategoriesAdapter adapter;
+    private FragmentMainBinding binding;
 
 
     public MainActivityFragment() {
@@ -41,20 +46,29 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        binding = FragmentMainBinding.inflate(inflater);
+        View view = binding.getRoot();
 
-        ListView lvBeer = (ListView) view.findViewById(R.id.lvBeer);
 
         items = new ArrayList<>();
-
-        adapter = new ArrayAdapter<>(
+        adapter = new CategoriesAdapter(
                 getContext(),
                 R.layout.lv_beer_row,
-                R.id.tvName,
                 items
         );
-        lvBeer.setAdapter(adapter);
 
+        binding.lvBeer.setAdapter(adapter);
+
+        binding.lvBeer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Categories categorie = (Categories) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra("categorie",categorie);
+
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
