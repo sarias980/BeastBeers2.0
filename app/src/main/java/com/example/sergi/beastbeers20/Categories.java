@@ -1,12 +1,17 @@
 package com.example.sergi.beastbeers20;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.io.Serializable;
 
 /**
  * Created by Sarias on 02/01/2018.
  */
 
+@Entity
 public class Categories implements Serializable {
+    @PrimaryKey
     private int id;
     private String name;
     private String desc;
