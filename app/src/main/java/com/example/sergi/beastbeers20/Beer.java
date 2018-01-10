@@ -16,6 +16,7 @@ public class Beer {
     private char isOrganic;
     private Date creaciónDate;
 
+
     public String getNombre() {
         return nombre;
     }
