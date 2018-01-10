@@ -81,7 +81,7 @@ public class MainActivityFragment extends LifecycleFragment {
         model = ViewModelProviders.of(this).get(DataViewModel.class);
         model.getCategories().observe(this, new Observer<List<Categories>>() {
             @Override
-            public void onChanged(@Nullable List<Categories> movies) {
+            public void onChanged(@Nullable List<Categories> categori) {
                 adapter.clear();
                 adapter.addAll(categori);
             }
@@ -114,6 +114,6 @@ public class MainActivityFragment extends LifecycleFragment {
     }
 
     private void refresh() {
-        model.reload();
+        model.refresh();
     }
 }
