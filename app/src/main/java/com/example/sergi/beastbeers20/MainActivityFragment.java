@@ -1,5 +1,6 @@
 package com.example.sergi.beastbeers20;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -36,10 +37,9 @@ public class MainActivityFragment extends LifecycleFragment {
     private ArrayList<Categories> items;
     private CategoriesAdapter adapter;
     private FragmentMainBinding binding;
-    private SharedPreferences preferences;
     private DataViewModel model;
-
-
+    private SharedViewModel sharedModel;
+    private ProgressDialog dialog;
 
     public MainActivityFragment() {
     }
@@ -65,16 +65,21 @@ public class MainActivityFragment extends LifecycleFragment {
                 items
         );
 
+        sharedModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         binding.lvBeer.setAdapter(adapter);
 
         binding.lvBeer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Categories categori = (Categories) adapterView.getItemAtPosition(i);
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra("categorie",categori);
 
-                startActivity(intent);
+                if (!esTablet()) {
+                    Intent intent = new Intent(getContext(), DetailActivity.class);
+                    intent.putExtra("categorie",categori);
+                    startActivity(intent);
+                } else {
+                    sharedModel.select(categori);
+                }
             }
         });
 
@@ -87,12 +92,29 @@ public class MainActivityFragment extends LifecycleFragment {
             }
         });
 
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage("Loading...");
+
+        model.getLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean mostrat) {
+                if(mostrat)
+                    dialog.show();
+                else
+                    dialog.dismiss();
+            }
+        });
+
         return view;
+    }
+
+    boolean esTablet() {
+        return getResources().getBoolean(R.bool.tablet);
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_refresh, menu);
     }
 
     @Override

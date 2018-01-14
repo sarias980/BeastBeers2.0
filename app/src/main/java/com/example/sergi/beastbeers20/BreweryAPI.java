@@ -23,7 +23,7 @@ public class BreweryAPI {
         Uri builtUri = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendPath("beer")
-                .appendQueryParameter("filtro", filtro)
+                .appendPath(filtro)
                 .appendQueryParameter("api_key", API_KEY)
                 .build();
         String url = builtUri.toString();
@@ -31,11 +31,11 @@ public class BreweryAPI {
         return doCall(url);
     }*/
 
-    ArrayList<Categories> getCategorias() {
+    ArrayList<Categories> getCategorias(String filtro) {
         Uri builtUri = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendPath("categories")
-               // .appendQueryParameter("filtro", filtro)
+                .appendPath(filtro)
                 .appendQueryParameter("key", API_KEY)
                 .build();
         String url = builtUri.toString();
@@ -46,11 +46,11 @@ public class BreweryAPI {
     }
 
 
-    ArrayList<Categories> getIngredientes() {
+    ArrayList<Categories> getIngredientes(String filtro) {
         Uri builtUri = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendPath("ingredients")
-               // .appendQueryParameter("filtro", filtro)
+                .appendPath(filtro)
                 .appendQueryParameter("key", API_KEY)
                 .build();
         String url = builtUri.toString();

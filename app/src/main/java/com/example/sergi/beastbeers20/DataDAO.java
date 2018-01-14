@@ -13,19 +13,19 @@ import java.util.List;
  */
 @Dao
 public interface DataDAO {
-    @Query("select * from categori")
+    @Query("select * from categories")
     LiveData<List<Categories>> getCategories();
 
     @Insert
-    void addCategori(Categories categori);
+    void addCategorie(Categories categories);
 
     @Insert
     void addCategories(List<Categories> categories);
 
     @Delete
-    void deleteCategories(Categories categori);
+    void deleteCategories(Categories categorie);
 
-    @Query("DELETE FROM categori")
+    @Query("DELETE FROM categories")
     void deleteCategories();
 
 }

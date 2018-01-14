@@ -21,7 +21,7 @@ public class DataViewModel extends AndroidViewModel {
     private final Application app;
     private final AppDatabase appDatabase;
     private final DataDAO dataDAO;
-    private LiveData<List<Categories>> categori;
+    private MutableLiveData<Boolean> loading;
 
     public DataViewModel(@NonNull Application application) {
         super(application);
@@ -39,20 +39,33 @@ public class DataViewModel extends AndroidViewModel {
         task.execute();
     }
 
+    public MutableLiveData<Boolean> getLoading() {
+        if(loading == null){
+            loading = new MutableLiveData<>();
+        }
+        return loading;
+    }
+
     private class RefreshDataTask extends AsyncTask<Void, Void, ArrayList<Categories>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading.setValue(true);
+        }
+
         @Override
         protected ArrayList<Categories> doInBackground(Void... voids) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(app.getApplicationContext());
             String tipusConsulta = preferences.getString("type_list", "categorias");
-            //String filtro = preferences.getString("id", "");
+            String filtro = preferences.getString("id", "");
 
             BreweryAPI api = new BreweryAPI();
             ArrayList<Categories> result;
 
             if (tipusConsulta.equals("categorias")) {
-                result = api.getCategorias();
+                result = api.getCategorias(filtro);
             } else {
-                result = api.getIngredientes();
+                result = api.getIngredientes(filtro);
             }
 
             dataDAO.deleteCategories();
@@ -60,5 +73,12 @@ public class DataViewModel extends AndroidViewModel {
 
             return result;
         }
+
+        @Override
+        protected void onPostExecute(ArrayList<Categories> categori) {
+            super.onPostExecute(categori);
+            loading.setValue(false);
+        }
+
     }
 }

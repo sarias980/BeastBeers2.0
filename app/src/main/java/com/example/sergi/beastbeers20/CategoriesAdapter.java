@@ -27,7 +27,6 @@ public class CategoriesAdapter extends ArrayAdapter<Categories> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         Categories categorie = getItem(position);
-        Log.w("XXXX", categorie.toString());
 
         LvBeerRowBinding binding = null;
 
